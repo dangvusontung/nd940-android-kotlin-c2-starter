@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="asteroid"
+            type="com.udacity.asteroidradar.Asteroid" />
+
+        <variable
+            name="listener"
+            type="com.udacity.asteroidradar.main.AsteroidListItemSelectedListener" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> listener.onItemSelected(asteroid)}"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{asteroid.codename}"
+                android:textColor="@color/default_text_color"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                tools:text="1234" />
+
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{asteroid.closeApproachDate}"
+                android:textColor="@color/text_grey"
+                android:textSize="16sp"
+                android:textStyle="normal"
+                tools:text="2022-06-12" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imgHazardous"
+            statusIcon="@{asteroid.potentiallyHazardous}"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/ic_help_circle" />
+
+    </LinearLayout>
+
+</layout>
