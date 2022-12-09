@@ -15,16 +15,9 @@ import kotlin.math.log
 private const val TAG = "MainViewModel"
 class MainViewModel(private val repository: AsteroidRepository) : ViewModel() {
 
-    private var _asteroid = repository.asteroids
-    private var _asteroidsByWeek = repository.getAsteroidByWeek
-
-    val asteroids: LiveData<List<Asteroid>>
-        get() = displayAsteroid
-
-    val asteroidsByWeek: LiveData<List<Asteroid>>
-        get() = _asteroidsByWeek
-
     private val displayAsteroid = MutableLiveData<List<Asteroid>>()
+
+    val asteroids: LiveData<List<Asteroid>> = displayAsteroid
 
     val pictureOfDay: LiveData<PictureOfDay?> = repository.pictureOfDay
 
@@ -37,7 +30,7 @@ class MainViewModel(private val repository: AsteroidRepository) : ViewModel() {
         viewModelScope.launch {
             try {
                 repository.loadAsteroidData()
-                displayAsteroid.postValue(repository.asteroids.value)
+                filterAsteroidByDay()
             } catch (exception: java.lang.Exception) {
                 Log.d(TAG, "Error: ${exception}")
             }
@@ -50,13 +43,35 @@ class MainViewModel(private val repository: AsteroidRepository) : ViewModel() {
     }
 
     fun filterAsteroidByDay() {
-        displayAsteroid.value = repository.asteroids.value
-        Log.d(TAG, "filterAsteroidByDay hashcode: ${displayAsteroid.hashCode()}")
+        viewModelScope.launch {
+            try {
+                val byDay = repository.getAsteroidByDay()
+                displayAsteroid.value = byDay
+            } catch (ex: java.lang.Exception) {
+                Log.d(TAG, "filterAsteroidByWeek: $ex")
+            }
+        }
     }
 
     fun filterAsteroidByWeek() {
-        displayAsteroid.value = repository.getAsteroidByWeek.value
-        Log.d(TAG, "filterAsteroidByWeek: hashcode ${displayAsteroid.hashCode()}")
+        viewModelScope.launch {
+            try {
+                val byWeek = repository.getAsteroidByWeek()
+                displayAsteroid.value = byWeek
+            } catch (ex: java.lang.Exception) {
+                Log.d(TAG, "filterAsteroidByWeek: $ex")
+            }
+        }
     }
 
+    fun filterAllAsteroid() {
+        viewModelScope.launch {
+            try {
+                val all = repository.getAllAsteroid()
+                displayAsteroid.value = all
+            } catch (ex: java.lang.Exception) {
+                Log.d(TAG, "filterAsteroidByWeek: $ex")
+            }
+        }
+    }
 }

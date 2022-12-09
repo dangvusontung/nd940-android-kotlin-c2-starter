@@ -77,4 +77,30 @@ class AsteroidRepository(context: Context) {
             Asteroid(it)
         }
     }
+
+    suspend fun getAsteroidByDay(): List<Asteroid> {
+        val result = asteroidDao.getTodayAsteroidQuery(Date().time).map {
+            Asteroid(it)
+        }
+        return result
+    }
+
+    suspend fun getAsteroidByWeek(): List<Asteroid> {
+        val result = asteroidDao.getAsteroidByDateQuery(
+            DateUtil.startOfWeek().toTimestamp(),
+            DateUtil.endOfWeek().toTimestamp()
+        ).map {
+            Asteroid(it)
+        }
+
+        return result
+    }
+
+    suspend fun getAllAsteroid(): List<Asteroid> {
+        val result = asteroidDao.getAllAsteroid().map {
+            Asteroid(it)
+        }
+
+        return result
+    }
 }

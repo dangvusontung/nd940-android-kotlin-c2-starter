@@ -88,6 +88,10 @@ class MainFragment : Fragment() {
             R.id.show_week_asteroid -> {
                 viewModel.filterAsteroidByWeek()
             }
+
+            R.id.show_saved_asteroid -> {
+                viewModel.filterAllAsteroid()
+            }
             else -> {}
         }
         return true
