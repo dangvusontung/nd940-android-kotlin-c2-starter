@@ -10,7 +10,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
+import com.udacity.asteroidradar.utils.DateUtil
 import com.udacity.asteroidradar.utils.MainViewModelFactory
+
+private const val TAG = "MainFragment"
 
 class MainFragment : Fragment() {
 
@@ -49,7 +52,11 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.asteroids.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+            it?.let {
+                Log.d(TAG, "observe list: ${it.size}")
+                adapter.submitList(it)
+            }
+
         }
 
         viewModel.pictureOfDay.observe(viewLifecycleOwner) {
@@ -73,6 +80,16 @@ class MainFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.show_today_asteroid -> {
+                viewModel.filterAsteroidByDay()
+            }
+
+            R.id.show_week_asteroid -> {
+                viewModel.filterAsteroidByWeek()
+            }
+            else -> {}
+        }
         return true
     }
 }

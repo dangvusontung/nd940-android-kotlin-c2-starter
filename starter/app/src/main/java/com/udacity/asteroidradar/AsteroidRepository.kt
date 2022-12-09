@@ -13,7 +13,9 @@ import com.udacity.asteroidradar.api.AsteroidAPIService
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.database.AsteroidDatabase
 import com.udacity.asteroidradar.database.AsteroidRoomEntity
+import com.udacity.asteroidradar.utils.DateUtil
 import com.udacity.asteroidradar.utils.toQueryString
+import com.udacity.asteroidradar.utils.toTimestamp
 import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -37,6 +39,7 @@ class AsteroidRepository(context: Context) {
     private val asteroidDao = AsteroidDatabase.getInstance(context.applicationContext).asteroidDao
 
     private val _asteroid = asteroidDao.getTodayAsteroid(Date().time)
+
     private val _pictureOfTheDay = MutableLiveData<PictureOfDay?>(null)
 
     val asteroids: LiveData<List<Asteroid>> = _asteroid.map { data ->
@@ -64,5 +67,14 @@ class AsteroidRepository(context: Context) {
 
         val pictureOfDay = apiService.getPictureOfTheDay()
         _pictureOfTheDay.value = pictureOfDay
+    }
+
+    val getAsteroidByWeek = asteroidDao.getAsteroidByDate(
+        DateUtil.startOfWeek().toTimestamp(),
+        DateUtil.endOfWeek().toTimestamp()
+    ).map { data ->
+        data.map {
+            Asteroid(it)
+        }
     }
 }

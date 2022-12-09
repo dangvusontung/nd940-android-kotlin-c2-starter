@@ -10,3 +10,4 @@ fun String.toTimestamp(): Long {
     val date = simpleDateFormat.parse(this)
     return date?.time ?: 0L
 }
+

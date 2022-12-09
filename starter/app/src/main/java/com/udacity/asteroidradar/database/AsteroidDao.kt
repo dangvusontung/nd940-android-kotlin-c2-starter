@@ -16,9 +16,11 @@ interface AsteroidDao {
     @Update
     suspend fun update(asteroid: AsteroidRoomEntity)
 
-    @Query("SELECT * FROM asteroid_table WHERE closeApproachDate >=:timeStamp ORDER BY closeApproachDate ASC")
+    @Query("SELECT * FROM asteroid_table WHERE closeApproachDate >=:timeStamp ORDER BY closeApproachDate ASC LIMIT 2")
     fun getTodayAsteroid(timeStamp: Long): LiveData<List<AsteroidRoomEntity>>
 
-    @Query("SELECT * FROM asteroid_table ORDER BY closeApproachDate ASC LIMIT 10")
-    fun getAllAsteroid(): LiveData<List<AsteroidRoomEntity>>
+    @Query("SELECT * FROM asteroid_table WHERE closeApproachDate >=:startDateTimeStamp AND closeApproachDate <=:endDateTimeStamp ORDER BY closeApproachDate ASC LIMIT 10")
+    fun getAsteroidByDate(startDateTimeStamp: Long, endDateTimeStamp: Long): LiveData<List<AsteroidRoomEntity>>
+
+
 }
