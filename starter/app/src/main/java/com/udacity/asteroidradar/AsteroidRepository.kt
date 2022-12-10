@@ -42,16 +42,11 @@ class AsteroidRepository(context: Context) {
 
     private val _pictureOfTheDay = MutableLiveData<PictureOfDay?>(null)
 
-    val asteroids: LiveData<List<Asteroid>> = _asteroid.map { data ->
-        data.map {
-            Asteroid(it)
-        }
-    }
-
     val pictureOfDay: LiveData<PictureOfDay?>
         get() = _pictureOfTheDay
 
     suspend fun loadAsteroidData() {
+
         val currentDate = Date().toQueryString()
         val response = apiService.getFeed(currentDate)
         val jsonObject = JSONObject(response)
@@ -67,15 +62,6 @@ class AsteroidRepository(context: Context) {
 
         val pictureOfDay = apiService.getPictureOfTheDay()
         _pictureOfTheDay.value = pictureOfDay
-    }
-
-    val getAsteroidByWeek = asteroidDao.getAsteroidByDate(
-        DateUtil.startOfWeek().toTimestamp(),
-        DateUtil.endOfWeek().toTimestamp()
-    ).map { data ->
-        data.map {
-            Asteroid(it)
-        }
     }
 
     suspend fun getAsteroidByDay(): List<Asteroid> {

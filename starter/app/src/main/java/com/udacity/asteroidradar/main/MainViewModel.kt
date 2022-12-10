@@ -28,9 +28,9 @@ class MainViewModel(private val repository: AsteroidRepository) : ViewModel() {
 
     init {
         viewModelScope.launch {
+            filterAsteroidByDay()
             try {
                 repository.loadAsteroidData()
-                filterAsteroidByDay()
             } catch (exception: java.lang.Exception) {
                 Log.d(TAG, "Error: ${exception}")
             }
